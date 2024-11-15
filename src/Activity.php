@@ -19,8 +19,8 @@ use LimitIterator;
 use React\Promise\PromiseInterface;
 use SplFileObject;
 use Throwable;
+use Workflow\Middleware\ActivityMiddleware;
 use Workflow\Middleware\WithoutOverlappingMiddleware;
-use Workflow\Middleware\WorkflowMiddleware;
 use Workflow\Models\StoredWorkflow;
 use Workflow\Serializers\Y;
 
@@ -112,7 +112,7 @@ class Activity implements ShouldBeEncrypted, ShouldQueue
                 0,
                 $this->timeout
             ),
-            new WorkflowMiddleware(),
+            new ActivityMiddleware(),
         ];
     }
 
