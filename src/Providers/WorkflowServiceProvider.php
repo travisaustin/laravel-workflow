@@ -54,7 +54,7 @@ final class WorkflowServiceProvider extends ServiceProvider
 
         $this->commands([ActivityMakeCommand::class, WorkflowMakeCommand::class]);
 
-		$this->app->bind(SerializerInterface::class, config('workflows.serializer_class', Y::class));
+		$this->app->singleton(SerializerInterface::class, fn() => call_user_func([config('workflows.serializer_class', Y::class), 'getInstance']));
     }
 
     public function register(): void

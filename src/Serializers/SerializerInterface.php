@@ -13,4 +13,7 @@ interface SerializerInterface
     public static function serialize($data): string;
 
     public static function unserialize(string $data);
+
+	public static function getInstance(): self;
+
 }
