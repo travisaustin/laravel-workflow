@@ -8,8 +8,8 @@ use Carbon\CarbonInterval;
 use Illuminate\Database\QueryException;
 use React\Promise\Deferred;
 use React\Promise\PromiseInterface;
+use Workflow\Serializers\SerializerInterface;
 use function React\Promise\resolve;
-use Workflow\Serializers\Y;
 use Workflow\Signal;
 
 trait Timers
@@ -31,7 +31,7 @@ trait Timers
 
         if ($log) {
             ++self::$context->index;
-            return resolve(Y::unserialize($log->result));
+            return resolve(app(SerializerInterface::class)->unserialize($log->result));
         }
 
         $timer = self::$context->storedWorkflow->timers()
@@ -62,7 +62,7 @@ trait Timers
                             'index' => self::$context->index,
                             'now' => self::$context->now,
                             'class' => Signal::class,
-                            'result' => Y::serialize(true),
+                            'result' => app(SerializerInterface::class)->serialize(true),
                         ]);
                 } catch (QueryException $exception) {
                     // already logged

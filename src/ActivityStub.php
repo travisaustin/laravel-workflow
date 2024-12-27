@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Workflow;
 
 use Laravel\SerializableClosure\SerializableClosure;
+use Workflow\Serializers\SerializerInterface;
 use function React\Promise\all;
 use React\Promise\Deferred;
 use React\Promise\PromiseInterface;
 use function React\Promise\resolve;
 use Throwable;
-use Workflow\Serializers\Y;
 
 final class ActivityStub
 {
@@ -43,7 +43,7 @@ final class ActivityStub
                         'index' => $context->index,
                         'now' => $context->now,
                         'class' => $activity,
-                        'result' => Y::serialize(is_callable($result) ? $result($context, ...$arguments) : $result),
+                        'result' => app(SerializerInterface::class)->serialize(is_callable($result) ? $result($context, ...$arguments) : $result),
                     ]);
 
                 WorkflowStub::recordDispatched($activity, $arguments);
@@ -53,7 +53,7 @@ final class ActivityStub
         if ($log) {
             ++$context->index;
             WorkflowStub::setContext($context);
-            $result = Y::unserialize($log->result);
+            $result = app(SerializerInterface::class)->unserialize($log->result);
             if (
                 is_array($result) &&
                 array_key_exists('class', $result) &&

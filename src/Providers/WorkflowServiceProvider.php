@@ -22,6 +22,8 @@ use Workflow\Listeners\MonitorActivityStarted;
 use Workflow\Listeners\MonitorWorkflowCompleted;
 use Workflow\Listeners\MonitorWorkflowFailed;
 use Workflow\Listeners\MonitorWorkflowStarted;
+use Workflow\Serializers\SerializerInterface;
+use Workflow\Serializers\Y;
 
 final class WorkflowServiceProvider extends ServiceProvider
 {
@@ -51,6 +53,8 @@ final class WorkflowServiceProvider extends ServiceProvider
         ], 'migrations');
 
         $this->commands([ActivityMakeCommand::class, WorkflowMakeCommand::class]);
+
+		$this->app->bind(SerializerInterface::class, config('workflows.serializer_class', Y::class));
     }
 
     public function register(): void
